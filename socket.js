@@ -49,6 +49,10 @@ var listen = function(server, sessionMiddleware) {
                 //      httpOnly: false },
                 //   passport: { user: 'mongodbID123' }
                 // }
+                
+                
+                // I understand this is becuase it reinstantiates the middleware and connection.
+                // Trying to figure out an elegent solution to keep the sessions in sysnc.
             })
         })
 
