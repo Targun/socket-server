@@ -12,7 +12,7 @@ var listen = function(server, sessionMiddleware) {
 
         sessionService.getSessionBySessionID(socket.request.sessionID, function(err, session){
             // NOT LOGGED IN AND CONSOLES AS AS EXPECTED
-            console.log(session.passport.user)
+            console.log(session)
             // Session {
             //   cookie: 
             //    { path: '/',
@@ -31,7 +31,7 @@ var listen = function(server, sessionMiddleware) {
         socket.on('message', function(req){
             sessionService.getSessionBySessionID(socket.request.sessionID, function(err, session){
                 // NOW LOGGED IN AND STILL CONSOLES OUTDATED SESSION
-                console.log(session.passport.user)
+                console.log(session)
                 // Session {
                 //   cookie: 
                 //    { path: '/',
