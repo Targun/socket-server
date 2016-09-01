@@ -10,20 +10,5 @@ var self = module.exports = {
             if (callback != undefined)
                 callback(null, session);
         });
-    },
-    updateSession: function (session, callback) {
-        try {
-            session.reload(function () {
-                session.touch().save();
-                callback(null, session);
-            });
-        }
-        catch (err) {
-            callback(err);
-        }
-    },
-    setSessionProperty: function (session, propertyName, propertyValue, callback) {
-        session[propertyName] = propertyValue;
-        self.updateSession(session, callback);
     }
 };
