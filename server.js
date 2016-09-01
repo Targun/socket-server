@@ -7,9 +7,7 @@ var session           = require('express-session');
 var bodyParser        = require('body-parser');
 var cookieParser      = require('cookie-parser');
 var mongoose          = require('mongoose'); 
-var morgan            = require('morgan');
 var passport          = require('passport');
-var path              = require('path');
 
 // ===========================================================
 
@@ -21,7 +19,6 @@ var app               = express();
 var http              = require('http').Server(app);
 
 // BOILERPLATE
-app.use(morgan('dev'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 mongoose.Promise = require('bluebird')
@@ -66,26 +63,5 @@ require('./socket').listen(http, sessionMiddleware)
 
 // ===========================================================
 var startServer = function() {
-    // MONGODB
-    mongoose.connection.on('open', function (ref) {
-        console.log('Connected to: MongoDB');
-        http.listen(port, function(){
-          console.log('Server listening on port ' + port);
-        });
-    });
-    mongoose.connection.on('error', function (err) {
-        console.log('Could not connect to mongo server!');
-        console.log(err);
-        process.exit(1);
-    });
-    mongoose.connect(process.env.COMPOSE_URI);
-
-    // REDIS
-    redisClient.on('connect', function () {
-        console.log('Connected to: Redis');
-        // redisClient.set('string key', 'string val', redis.print);
-    });
-    redisClient.on('error', function (err) {
-        console.log('Redis error occurred: ' + err);
-    });
+    // CONNETING TO MONGODB & REDIS HERE
 }();
