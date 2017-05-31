@@ -63,31 +63,31 @@ var io           = socketio.listen(http);
 // Intercept Socket.io's handshake request
 io.use(function (socket, next) {
 	cookieParser(process.env.SESSION_SECRET)(socket.request, {}, function (err) {
-	  // Get the session id from the request cookies
-	  var sessionId = socket.request.signedCookies ? socket.request.signedCookies[process.env.SESSION_KEY] : undefined;
+		// Get the session id from the request cookies
+		var sessionId = socket.request.signedCookies ? socket.request.signedCookies[process.env.SESSION_KEY] : undefined;
 
-	  if (!sessionId) return next(new Error('sessionId was not found in socket.request'), false);
-	  // Use the redisStore instance to get the Express session information
-	  redisStore.load(sessionId, function (err, session) {
+		if (!sessionId) return next(new Error('sessionId was not found in socket.request'), false);
+		// Use the redisStore instance to get the Express session information
+		redisStore.load(sessionId, function (err, session) {
 
-	    if (err) return next(err, false);
+			if (err) return next(err, false);
 
-      if (!session) return next(new Error('session was not found for ' + sessionId), false);
+			if (!session) return next(new Error('session was not found for ' + sessionId), false);
 
-	    // Set the Socket.io session information
-	    socket.request.session = session
+			// Set the Socket.io session information
+			socket.request.session = session
 
-	    // Use Passport to populate the user details
-	    passport.initialize()(socket.request, {}, function () {
-	      passport.session()(socket.request, {}, function () {
-          if (socket.request.user) {
-            next(null, true);
-          } else {
-            next(new Error('User is not authenticated'), false);
-          }
-        })
-	    })
-	  })
+			// Use Passport to populate the user details
+			passport.initialize()(socket.request, {}, function () {
+				passport.session()(socket.request, {}, function () {
+					if (socket.request.user) {
+						next(null, true);
+					} else {
+						next(new Error('User is not authenticated'), false);
+					}
+				})
+			})
+		})
 	})
 })
 
@@ -95,15 +95,15 @@ io.use(function (socket, next) {
 io.on('connection', function (socket) {
 	console.log('CONNECTED to socket.io')
 
-  // FILE
-  socket.on('/api/create', function(req){
-    console.log(req)
-    console.log(socket.request.user)
-  })
+	// FILE
+	socket.on('/api/create', function(req){
+		console.log(req)
+		console.log(socket.request.user)
+	})
 
-  socket.on('disconnect', function(){
-      console.log('DISCONNECTED to socket.io')
-  })
+	socket.on('disconnect', function(){
+		console.log('DISCONNECTED to socket.io')
+	})
 })
 
 
@@ -113,25 +113,25 @@ io.on('connection', function (socket) {
 
 // ===========================================================
 var startServer = function() {
-    // MONGODB
-    mongoose.connection.on('open', function (ref) {
-        console.log('Connected to: MongoDB');
-        http.listen(port, function(){
-          console.log('Server listening on port ' + port);
-        });
-    });
-    mongoose.connection.on('error', function (err) {
-        console.log('Could not connect to mongo server!');
-        console.log(err);
-        process.exit(1);
-    });
-    mongoose.connect(process.env.MONGODB_URI);
+	// MONGODB
+	mongoose.connection.on('open', function (ref) {
+		console.log('Connected to: MongoDB');
+        	http.listen(port, function(){
+			console.log('Server listening on port ' + port);
+		})
+	})
+	mongoose.connection.on('error', function (err) {
+		console.log('Could not connect to mongo server!')
+		console.log(err
+		process.exit(1)
+	})
+	mongoose.connect(process.env.MONGODB_URI);
 
-    // REDIS
-    redisClient.on('connect', function () {
-        console.log('Connected to: Redis');
-    });
-    redisClient.on('error', function (err) {
-        console.log('Redis error occurred: ' + err);
-    });
+	// REDIS
+	redisClient.on('connect', function () {
+		console.log('Connected to: Redis');
+	});
+	redisClient.on('error', function (err) {
+		console.log('Redis error occurred: ' + err);
+	});
 }();
